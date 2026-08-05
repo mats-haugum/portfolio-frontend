@@ -1,4 +1,5 @@
 import { contact } from "@/lib/data";
+import ContactLinks from "@/components/ContactLinks";
 
 export default function Footer() {
   return (
@@ -11,19 +12,7 @@ export default function Footer() {
           {contact.email}
         </a>
 
-        <div className="flex flex-wrap gap-6">
-          {contact.links.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-xs uppercase tracking-widest text-muted transition-colors hover:text-accent"
-            >
-              {link.label} ↗
-            </a>
-          ))}
-        </div>
+        <ContactLinks />
       </div>
 
       <p className="mt-6 font-mono text-xs text-muted">

@@ -5,9 +5,9 @@ import SectionHeading from "@/components/SectionHeading";
 export default function Expertise() {
   return (
     <section id="expertise" className="mx-auto max-w-6xl px-6 pb-32 pt-40 sm:px-10">
-      <SectionHeading label="expertise" title="What I do" />
+      <SectionHeading path="/expertise" title="What I do" />
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2">
         {expertise.map((item, i) => (
           <Reveal
             key={item.title}
