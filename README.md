@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Frontend
 
-## Getting Started
+Mats Haugum's personal portfolio site — a Next.js App Router site with an API/terminal
+visual identity: routes styled as endpoints, with mock HTTP responses woven into the UI.
 
-First, run the development server:
+## Stack
+
+- [Next.js](https://nextjs.org) 16 (App Router)
+- [React](https://react.dev) 19
+- [Tailwind CSS](https://tailwindcss.com) 4
+- [Framer Motion](https://motion.dev) for scroll/mount reveal animations
+- TypeScript
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view it.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the dev server |
+| `npm run build` | Production build |
+| `npm run start` | Run the production build |
+| `npm run lint` | Lint via `eslint.config.mjs` (`eslint-config-next` core-web-vitals + TypeScript) |
 
-## Learn More
+There is no test runner configured in this repo.
 
-To learn more about Next.js, take a look at the following resources:
+## Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `src/app/` — App Router routes: `/`, `/expertise`, `/projects`, `/experience`, `/contact`.
+  Each `page.tsx` is a thin wrapper exporting route metadata and rendering one section
+  component. `src/app/layout.tsx` owns shared chrome (nav, footer, JSON-LD `Person` script,
+  the single `<main>`). `not-found.tsx` and `error.tsx` render mock 404/500 responses.
+- `src/components/` — one component per page section (`Hero`, `Expertise`, `Projects`,
+  `Experience`, `Contact`) plus shared pieces (`Reveal`, `SectionHeading`, `ContactLinks`,
+  `MotionProvider`, `Nav`, `Footer`).
+- `src/lib/data.ts` — all site copy (profile, nav, expertise, projects, education,
+  experience, contact) as typed data. Components map over this rather than holding their
+  own copy.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Content changes go in `src/lib/data.ts`; layout/behavior changes go in the relevant
+component. See `CLAUDE.md` and `AGENTS.md` for the fuller set of project conventions.
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deployable anywhere Next.js runs, e.g. [Vercel](https://vercel.com/new).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+npm run start
+```
