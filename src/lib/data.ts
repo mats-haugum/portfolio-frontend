@@ -27,7 +27,7 @@ export const profile: Profile = {
   name: "Mats Haugum",
   role: "Backend / Fullstack Developer",
   summary:
-    "I care about building applications with robust backends and well-documented, predictable APIs",
+    "Backend is my main focus — robust services with well-documented, predictable APIs — but I'm comfortable anywhere in the stack, from database design to the frontend on top.",
   stack: ["C#", "ASP.NET Core", ".NET Framework", "Entity Framework", "Node.js", "Express.js", "Sequelize", "SQL Server", "React", "Next.js", "TypeScript", "HTML"],
   interests: ["climbing", "technology", "science", "psychology"],
 };
