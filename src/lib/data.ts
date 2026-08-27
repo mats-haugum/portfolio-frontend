@@ -109,7 +109,7 @@ export const projects: readonly Project[] = [
     context: "Year-2 exam project — Noroff, 2026",
     description:
       "Full-stack appointment booking for medical clinics: patients book as guests or register to manage their appointments, while an admin panel gives clinic staff control over doctors, clinics, specialties, and appointment categories. ASP.NET Core REST API with JWT auth and refresh token rotation.",
-    tags: ["C#", "ASP.NET Core", "EF Core", "SQL Server", "React", "TypeScript", "JWT"],
+    tags: ["C#", "ASP.NET Core", "EF Core", "SQL Server", "React", "TypeScript", "JWT", "Refresh Tokens"],
     href: null, // TODO: swap in the repo URL once ClinicBook goes public.
   },
 ];

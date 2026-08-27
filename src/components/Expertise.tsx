@@ -12,7 +12,8 @@ export default function Expertise() {
           <Reveal
             key={item.title}
             delay={i * 0.1}
-            className="rounded-2xl border border-border p-6 transition-colors hover:border-accent/50"
+            // if you want to use hover effect: add hover:border-accent/50 to className
+            className="rounded-2xl border border-border p-6 transition-colors"
           >
             <h3 className="text-lg font-semibold text-foreground">
               {item.title}
