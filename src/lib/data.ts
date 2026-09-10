@@ -93,6 +93,40 @@ export const expertise: readonly ExpertiseArea[] = [
   },
 ];
 
+// Media shown on a project's case-study page. Files live in public/projects/<slug>/.
+// width/height must be the file's true intrinsic pixels, or images shift and posters letterbox.
+interface MediaBase {
+  src: string;
+  alt: string;
+  caption?: string;
+  width: number;
+  height: number;
+}
+
+export interface ProjectImage extends MediaBase {
+  type: "image";
+}
+
+// Screencasts are webm only — the poster is what iOS Safari falls back to, so it's required.
+export interface ProjectVideo extends MediaBase {
+  type: "video";
+  poster: string;
+}
+
+export type ProjectMedia = ProjectImage | ProjectVideo;
+
+export interface CaseStudySection {
+  heading: string;
+  body: readonly string[];
+  media: readonly ProjectMedia[];
+}
+
+export interface CaseStudy {
+  overview: string;
+  ogImage: string;
+  sections: readonly CaseStudySection[];
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -100,6 +134,9 @@ export interface Project {
   description: string;
   tags: readonly string[];
   href: string | null;
+  demo: string | null;
+  demoNote: string | null;
+  caseStudy: CaseStudy | null;
 }
 
 export const projects: readonly Project[] = [
@@ -110,9 +147,94 @@ export const projects: readonly Project[] = [
     description:
       "Full-stack appointment booking for medical clinics: patients book as guests or register to manage their appointments, while an admin panel gives clinic staff control over doctors, clinics, specialties, and appointment categories. ASP.NET Core REST API with JWT auth and refresh token rotation.",
     tags: ["C#", "ASP.NET Core", "EF Core", "SQL Server", "React", "TypeScript", "JWT", "Refresh Tokens"],
-    href: null, // TODO: swap in the repo URL once ClinicBook goes public.
+    href: "https://github.com/mats-haugum/clinicbook", // repo URL
+    demo: "https://app.matshaugum.com/projects/clinicbook/",
+    demoNote: null, // TODO: set if the demo needs a login hint, e.g. seeded admin credentials.
+    caseStudy: {
+      overview:
+        "ClinicBook is my year-2 exam project: a booking system for medical clinics, built as an ASP.NET Core REST API with a React front end on top. I wanted the booking itself to stay simple enough that a patient never has to make an account, while still giving clinic staff a real admin surface behind it.",
+      ogImage: "/projects/clinicbook/og.avif",
+      sections: [
+        {
+          heading: "Booking flow",
+          body: [
+            "A patient picks a clinic, a specialty, and a time slot, then confirms. Booking as a guest takes an email and nothing more — no account, no password.",
+            "Registering is optional and only buys you one thing: a place to see and manage the appointments you've already made. That kept the flow short for the common case without cutting off the people who want to come back to it.",
+          ],
+          media: [
+            {
+              type: "video",
+              src: "/projects/clinicbook/booking-flow.webm",
+              poster: "/projects/clinicbook/booking-flow-poster.jpg",
+              alt: "A patient picks a clinic, a specialty, and an available time slot, then confirms the appointment as a guest and lands on a confirmation screen.",
+              caption: "Booking as a guest, start to confirmation — silent screencast",
+              width: 1280,
+              height: 800,
+            },
+            {
+              type: "image",
+              src: "/projects/clinicbook/booking-confirmation.avif",
+              alt: "The confirmation screen showing the booked clinic, doctor, specialty, date, and time.",
+              caption: "Confirmation, with everything the patient needs to keep",
+              width: 1440,
+              height: 900,
+            },
+          ],
+        },
+        {
+          heading: "Admin panel",
+          body: [
+            "Clinic staff manage doctors, clinics, specialties, and appointment categories from one panel. These are the records the booking flow reads from, so adding a doctor or a new specialty changes what patients can book without a deploy.",
+          ],
+          media: [
+            {
+              type: "video",
+              src: "/projects/clinicbook/admin-panel.webm",
+              poster: "/projects/clinicbook/admin-panel-poster.jpg",
+              alt: "An administrator opens the doctors list, adds a doctor with a specialty and a clinic, and the new entry appears in the table.",
+              caption: "Managing doctors, clinics, specialties, and categories — silent screencast",
+              width: 1280,
+              height: 800,
+            },
+            {
+              type: "image",
+              src: "/projects/clinicbook/admin-doctors.png",
+              alt: "The admin doctors table, listing each doctor with their specialty and clinic.",
+              caption: "The doctors table the booking flow reads from",
+              width: 1440,
+              height: 900,
+            },
+          ],
+        },
+        {
+          heading: "Auth & API",
+          body: [
+            "The API issues short-lived JWT access tokens with refresh token rotation behind them, so a stolen access token stops being useful quickly and a refresh token can only be spent once.",
+          ],
+          media: [
+            {
+              type: "image",
+              src: "/projects/clinicbook/auto-refresh.avif",
+              alt: "A sequence diagram between the browser, the API, and SQL Server: login returns an access JWT and a refresh token, a later request fails with 401, the response interceptor posts the refresh token, the API validates and revokes it, issues a new pair, and the original request is retried automatically.",
+              caption: "The refresh cycle: a 401 is caught, tokens are rotated, and the request is retried",
+              width: 1613,
+              height: 1186,
+            },
+          ],
+        },
+      ],
+    },
   },
 ];
+
+export function getProject(slug: string) {
+  return projects.find((project) => project.slug === slug);
+}
+
+export const caseStudyProjects = projects.filter(
+  (project): project is Project & { caseStudy: CaseStudy } =>
+    project.caseStudy !== null,
+);
 
 export interface TimelineEntry {
   title: string;

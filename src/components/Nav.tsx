@@ -43,7 +43,9 @@ export default function Nav() {
 
         <nav className="hidden gap-8 sm:flex">
           {nav.map((item) => {
-            const active = pathname === item.href;
+            // Sub-routes like /projects/clinicbook keep /projects marked active.
+            const active =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
                 key={item.href}
@@ -77,7 +79,8 @@ export default function Nav() {
         }`}
       >
         {nav.map((item) => {
-          const active = pathname === item.href;
+          const active =
+            pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}

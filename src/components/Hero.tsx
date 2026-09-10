@@ -21,7 +21,7 @@ export default function Hero() {
 
       <Reveal mode="mount" delay={0}>
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-accent">
-          HTTP/1.1 200 OK
+          HTTP/3 200 OK
         </p>
       </Reveal>
 

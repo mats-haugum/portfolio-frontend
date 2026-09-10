@@ -7,6 +7,9 @@
   --border: #1f2733;
   --accent: #7dd3fc;
   --accent-glow: color-mix(in oklab, var(--accent) 12%, transparent);
+  /* Stronger than --accent-glow: the Hero glow is a large soft wash, this one
+     has to read as a halo on a small pill. */
+  --accent-glow-strong: color-mix(in oklab, var(--accent) 30%, transparent);
   --danger: #f87171;
 }
 

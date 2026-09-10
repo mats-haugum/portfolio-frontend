@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { projects } from "@/lib/data";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
+import ProjectLinks from "@/components/ProjectLinks";
 
 export default function Projects() {
   return (
@@ -15,7 +17,10 @@ export default function Projects() {
           <Reveal
             key={project.slug}
             delay={i * 0.1}
-            className="overflow-hidden rounded-2xl border border-border transition-colors hover:border-accent/50"
+            // The card reads as one affordance for the case study, so it and the
+            // case-study link light up together. Hovering an outbound link
+            // (live demo / view repo) releases both — you're headed elsewhere.
+            className="group relative overflow-hidden rounded-2xl border border-border transition-colors hover:border-foreground/30 has-[[data-external]:hover]:border-border"
           >
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-background/40 px-6 py-3 font-mono text-xs uppercase tracking-widest">
               <span className="text-muted">
@@ -50,22 +55,20 @@ export default function Projects() {
                 ))}
               </ul>
 
-              <div className="mt-6">
-                {project.href ? (
-                  <a
-                    href={project.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-mono text-sm text-muted transition-colors hover:text-accent"
+              <ProjectLinks project={project}>
+                {project.caseStudy ? (
+                  // after:inset-0 stretches this link over the whole card, so
+                  // clicking anywhere opens the case study. It's an overlay on
+                  // the real link rather than an <a> wrapping the card, which
+                  // would nest anchors and break the outbound links inside.
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="font-mono text-sm text-accent transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-foreground group-has-[[data-external]:hover]:text-accent"
                   >
-                    view repo →
-                  </a>
-                ) : (
-                  <span className="font-mono text-xs uppercase tracking-widest text-muted">
-                    [ repo coming soon ]
-                  </span>
-                )}
-              </div>
+                    read the case study <span aria-hidden="true">→</span>
+                  </Link>
+                ) : null}
+              </ProjectLinks>
             </div>
           </Reveal>
         ))}
