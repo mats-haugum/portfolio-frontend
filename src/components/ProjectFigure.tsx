@@ -13,15 +13,25 @@ export default function ProjectFigure({
   preload?: boolean;
   sizes?: string;
 }) {
+  // Portrait media (diagrams, mobile shots) is capped instead of filling the
+  // column: at full width it would upscale past its intrinsic pixels and run
+  // absurdly tall. Its `sizes` follows the cap (max-w-xl is 576px) and falls
+  // back to the caller's value below that breakpoint.
+  const portrait = item.height > item.width;
+
   return (
-    <figure className="overflow-hidden rounded-2xl border border-border">
+    <figure
+      className={`overflow-hidden rounded-2xl border border-border${
+        portrait ? " mx-auto w-full max-w-xl" : ""
+      }`}
+    >
       {item.type === "image" ? (
         <Image
           src={item.src}
           alt={item.alt}
           width={item.width}
           height={item.height}
-          sizes={sizes}
+          sizes={portrait ? `(min-width: 640px) 576px, ${sizes}` : sizes}
           preload={preload}
           className="h-auto w-full"
         />

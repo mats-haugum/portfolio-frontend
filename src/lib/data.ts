@@ -146,7 +146,22 @@ export const projects: readonly Project[] = [
     context: "Year-2 exam project — Noroff, 2026",
     description:
       "Full-stack appointment booking for medical clinics: patients book as guests or register to manage their appointments, while an admin panel gives clinic staff control over doctors, clinics, specialties, and appointment categories. ASP.NET Core REST API with JWT auth and refresh token rotation.",
-    tags: ["C#", "ASP.NET Core", "EF Core", "SQL Server", "React", "TypeScript", "JWT", "Refresh Tokens"],
+    tags: [
+      "C#",
+      "ASP.NET Core",
+      "EF Core",
+      "SQL Server",
+      "Redis",
+      "React",
+      "TypeScript",
+      "JWT",
+      "Refresh Tokens",
+      "Integration Testing",
+      "Docker",
+      "Caddy",
+      "Cloudflare Tunnel",
+      "GitHub Actions",
+    ],
     href: "https://github.com/mats-haugum/clinicbook", // repo URL
     demo: "https://app.matshaugum.com/projects/clinicbook/",
     demoNote: null, // TODO: set if the demo needs a login hint, e.g. seeded admin credentials.
@@ -218,6 +233,25 @@ export const projects: readonly Project[] = [
               alt: "A sequence diagram between the browser, the API, and SQL Server: login returns an access JWT and a refresh token, a later request fails with 401, the response interceptor posts the refresh token, the API validates and revokes it, issues a new pair, and the original request is retried automatically.",
               caption: "The refresh cycle: a 401 is caught, tokens are rotated, and the request is retried",
               width: 1613,
+              height: 1186,
+            },
+          ],
+        },
+        {
+          heading: "Self-hosted architecture & deploys",
+          body: [
+            "The live demo runs on my own Ubuntu server with no inbound ports open. A Cloudflare Tunnel makes an outbound-only connection to Cloudflare's edge, so the router forwards nothing and the home IP never ends up in DNS. Behind the tunnel an edge Caddy routes by URL path across the projects I host and strips the /projects/clinicbook prefix, then hands off to the app's own Caddy, which serves the React build and proxies /api/* to the ASP.NET Core API on Kestrel.",
+            "SQL Server 2022 and Redis 7 run as containers on an internal Docker network with no internet access — nothing reaches them except the API. Redis is the distributed cache in front of the read-heavy endpoints: doctor search results are cached for 30 seconds and keyed on the query string, so repeated searches don't hit the database.",
+            "Testing and deploying are both automatic. Every push to main runs the integration suite in GitHub Actions — xUnit driving the full HTTP pipeline through WebApplicationFactory against a real SQL Server and a real Redis, so what the tests exercise is the same stack that runs in production, not mocks. Deploys are gated on that run: when CI finishes, GitHub sends an HMAC-signed workflow_run webhook to the server, and it only redeploys if the run succeeded on a push to main — then it pulls and rebuilds the Compose stack at the exact commit that passed. A red build never reaches production, and shipping is still just a push; I never SSH in to release.",
+          ],
+          media: [
+            {
+              type: "image",
+              src: "/projects/clinicbook/infrastructure.avif",
+              alt: "A flowchart of the request path: browser to Cloudflare edge (TLS, CDN, WAF), to a cloudflared tunnel making an outbound-only connection, to the edge Caddy that routes by path and strips /projects/clinicbook, to the app Caddy serving the React SPA and proxying /api/*, to the ASP.NET Core API on Kestrel port 8080. The API talks to SQL Server 2022 and Redis 7 on an internal Docker network with no internet access. A GitHub push sends an HMAC-signed webhook to the edge Caddy.",
+              caption:
+                "Request path in, HMAC-signed deploy webhook on the side — no open inbound ports",
+              width: 623,
               height: 1186,
             },
           ],
